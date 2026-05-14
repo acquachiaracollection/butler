@@ -67,11 +67,16 @@ export async function PATCH(
       if (body.image === null) {
         data.image = null
       } else {
-        const image = Number(body.image)
-        if (!Number.isFinite(image) || image <= 0) {
-          return NextResponse.json({ message: 'Immagine non valida' }, { status: 400 })
+        let image = null;
+        if (typeof body.image === 'number' && body.image > 0) {
+          image = body.image;
+        } else if (typeof body.image === 'string' && /^\d+$/.test(body.image) && Number(body.image) > 0) {
+          image = Number(body.image);
+        } else {
+          console.log('Image validation failed, value:', body.image);
+          return NextResponse.json({ message: 'Immagine non valida' }, { status: 400 });
         }
-        data.image = image
+        data.image = image;
       }
     }
 

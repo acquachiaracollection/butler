@@ -47,6 +47,19 @@ const formatEuro = (value: number) => {
   }).format(value)
 }
 
+const parseNumericId = (value: unknown): number | null => {
+  if (typeof value === 'number' && Number.isFinite(value) && value > 0) {
+    return value
+  }
+
+  if (typeof value === 'string' && /^\d+$/.test(value)) {
+    const parsed = Number(value)
+    return Number.isFinite(parsed) && parsed > 0 ? parsed : null
+  }
+
+  return null
+}
+
 export function InventoryManager({ initialMenuItems, categories }: InventoryManagerProps) {
   const [menuItems, setMenuItems] = useState<InventoryItem[]>(initialMenuItems)
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
@@ -103,8 +116,12 @@ export function InventoryManager({ initialMenuItems, categories }: InventoryMana
       throw new Error(data?.message || 'Errore upload immagine')
     }
 
-    const mediaId = typeof data?.id === 'number' ? data.id : null
-    const mediaUrl = typeof data?.url === 'string' ? data.url : null
+    const mediaId =
+      parseNumericId(data?.id) ?? parseNumericId(data?.doc?.id) ?? parseNumericId(data?.data?.id)
+    const mediaUrl =
+      (typeof data?.url === 'string' ? data.url : null) ??
+      (typeof data?.doc?.url === 'string' ? data.doc.url : null) ??
+      (typeof data?.data?.url === 'string' ? data.data.url : null)
 
     if (!mediaId) {
       throw new Error('Upload immagine non valido')

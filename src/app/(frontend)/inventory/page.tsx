@@ -21,7 +21,7 @@ const bodyFont = Manrope({
 export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {
-  title: 'Inventory Prodotti | Acqua Chiara',
+  title: 'Inventario Prodotti | Acqua Chiara',
 }
 
 export default async function InventoryPage() {
@@ -85,10 +85,10 @@ export default async function InventoryPage() {
           </p>
 
           <h1 className="mt-3 text-4xl leading-none text-black [font-family:var(--font-title)] sm:text-6xl">
-            Inventory Prodotti
+            Inventario Prodotti
           </h1>
           <p className="mt-3 text-sm text-gray-600 sm:text-lg">
-            Gestisci prodotti, prezzi, disponibilita e categorie.
+            Gestisci prodotti, prezzi, disponibilità e categorie.
           </p>
         </header>
 
