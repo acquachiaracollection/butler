@@ -49,6 +49,7 @@ const formatEuro = (value: number) => {
 
 export function InventoryManager({ initialMenuItems, categories }: InventoryManagerProps) {
   const [menuItems, setMenuItems] = useState<InventoryItem[]>(initialMenuItems)
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
   const [newItem, setNewItem] = useState<NewItemForm>(initialNewItemForm)
   const [newItemImageFile, setNewItemImageFile] = useState<File | null>(null)
   const [isCreating, setIsCreating] = useState(false)
@@ -139,7 +140,7 @@ export function InventoryManager({ initialMenuItems, categories }: InventoryMana
       const data = await response.json()
 
       if (!response.ok) {
-        throw new Error(data?.message || 'Errore salvataggio menu item')
+        throw new Error(data?.message || 'Errore salvataggio prodotto')
       }
 
       if (data?.item) {
@@ -154,9 +155,9 @@ export function InventoryManager({ initialMenuItems, categories }: InventoryMana
 
       setPendingImageFile(item.id, null)
 
-      alert('Menu item aggiornato con successo')
+      alert('Prodotto aggiornato con successo')
     } catch (error) {
-      const message = error instanceof Error ? error.message : 'Errore salvataggio menu item'
+      const message = error instanceof Error ? error.message : 'Errore salvataggio prodotto'
       alert(message)
     } finally {
       setItemSaving(item.id, false)
@@ -164,7 +165,7 @@ export function InventoryManager({ initialMenuItems, categories }: InventoryMana
   }
 
   const deleteItem = async (id: number) => {
-    const confirmed = window.confirm('Eliminare definitivamente questo menu item?')
+    const confirmed = window.confirm('Eliminare definitivamente questo prodotto?')
     if (!confirmed) return
 
     setItemDeleting(id, true)
@@ -176,12 +177,12 @@ export function InventoryManager({ initialMenuItems, categories }: InventoryMana
 
       const data = await response.json()
       if (!response.ok) {
-        throw new Error(data?.message || 'Errore eliminazione menu item')
+        throw new Error(data?.message || 'Errore eliminazione prodotto')
       }
 
       setMenuItems((current) => current.filter((item) => item.id !== id))
     } catch (error) {
-      const message = error instanceof Error ? error.message : 'Errore eliminazione menu item'
+      const message = error instanceof Error ? error.message : 'Errore eliminazione prodotto'
       alert(message)
     } finally {
       setItemDeleting(id, false)
@@ -230,14 +231,15 @@ export function InventoryManager({ initialMenuItems, categories }: InventoryMana
 
       const data = await response.json()
       if (!response.ok || !data?.item) {
-        throw new Error(data?.message || 'Errore creazione menu item')
+        throw new Error(data?.message || 'Errore creazione prodotto')
       }
 
       setMenuItems((current) => [data.item as InventoryItem, ...current])
       setNewItem(initialNewItemForm)
       setNewItemImageFile(null)
+      setIsCreateModalOpen(false)
     } catch (error) {
-      const message = error instanceof Error ? error.message : 'Errore creazione menu item'
+      const message = error instanceof Error ? error.message : 'Errore creazione prodotto'
       alert(message)
     } finally {
       setIsCreating(false)
@@ -246,96 +248,139 @@ export function InventoryManager({ initialMenuItems, categories }: InventoryMana
 
   return (
     <div className="space-y-6">
-      <div className="rounded-2xl border border-black bg-white p-5 sm:p-6">
-        <h2 className="text-2xl font-semibold text-black [font-family:var(--font-title)] sm:text-3xl">
-          Nuovo menu item
-        </h2>
-
-        {!hasCategories && (
-          <p className="mt-3 rounded-lg border border-black bg-gray-50 p-3 text-sm text-black">
-            Nessuna categoria disponibile. Crea prima una categoria dal pannello admin.
-          </p>
-        )}
-
-        <div className="mt-4 grid gap-3 sm:grid-cols-2">
-          <input
-            type="text"
-            value={newItem.name}
-            onChange={(e) => setNewItem((current) => ({ ...current, name: e.target.value }))}
-            placeholder="Nome"
-            disabled={isCreating || !hasCategories}
-            className="rounded-lg border border-black px-4 py-3 text-base"
-          />
-
-          <input
-            type="number"
-            min="0"
-            step="0.01"
-            value={newItem.price}
-            onChange={(e) => setNewItem((current) => ({ ...current, price: e.target.value }))}
-            placeholder="Prezzo"
-            disabled={isCreating || !hasCategories}
-            className="rounded-lg border border-black px-4 py-3 text-base"
-          />
-
-          <select
-            value={newItem.categoryId}
-            onChange={(e) => setNewItem((current) => ({ ...current, categoryId: e.target.value }))}
-            disabled={isCreating || !hasCategories}
-            className="rounded-lg border border-black px-4 py-3 text-base"
-          >
-            <option value="">Seleziona categoria</option>
-            {categories.map((category) => (
-              <option key={category.id} value={category.id}>
-                {category.name}
-              </option>
-            ))}
-          </select>
-
-          <label className="flex items-center gap-2 rounded-lg border border-black px-4 py-3 text-sm font-semibold text-black">
-            <input
-              type="checkbox"
-              checked={newItem.isAvailable}
-              onChange={(e) =>
-                setNewItem((current) => ({ ...current, isAvailable: e.target.checked }))
-              }
-              disabled={isCreating || !hasCategories}
-            />
-            Disponibile
-          </label>
-
-          <textarea
-            value={newItem.description}
-            onChange={(e) => setNewItem((current) => ({ ...current, description: e.target.value }))}
-            placeholder="Descrizione (opzionale)"
-            disabled={isCreating || !hasCategories}
-            rows={3}
-            className="sm:col-span-2 rounded-lg border border-black px-4 py-3 text-base"
-          />
-
-          <input
-            type="file"
-            accept="image/*"
-            onChange={(e) => setNewItemImageFile(e.target.files?.[0] ?? null)}
-            disabled={isCreating || !hasCategories}
-            className="rounded-lg border border-black px-4 py-3 text-base"
-          />
-        </div>
-
+      <div className="flex justify-end">
         <button
           type="button"
-          onClick={createItem}
-          disabled={isCreating || !hasCategories}
-          className="mt-4 rounded-xl bg-black px-6 py-3 text-base font-bold text-white transition hover:bg-stone-800 disabled:cursor-not-allowed disabled:opacity-50"
+          onClick={() => setIsCreateModalOpen(true)}
+          className="rounded-xl bg-black px-6 py-3 text-base font-bold text-white transition hover:bg-stone-800"
         >
-          {isCreating ? 'Creazione...' : 'Aggiungi menu item'}
+          Nuovo prodotto
         </button>
       </div>
+
+      {isCreateModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/45 p-4">
+          <div className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-2xl border border-black bg-white p-5 shadow-2xl sm:p-6">
+            <div className="flex items-start justify-between gap-4">
+              <h2 className="text-2xl font-semibold text-black [font-family:var(--font-title)] sm:text-3xl">
+                Nuovo prodotto
+              </h2>
+              <button
+                type="button"
+                onClick={() => {
+                  if (isCreating) return
+                  setIsCreateModalOpen(false)
+                }}
+                className="rounded-lg border border-black px-3 py-1.5 text-sm font-semibold text-black hover:bg-gray-100"
+              >
+                Chiudi
+              </button>
+            </div>
+
+            {!hasCategories && (
+              <p className="mt-3 rounded-lg border border-black bg-gray-50 p-3 text-sm text-black">
+                Nessuna categoria disponibile. Crea prima una categoria dal pannello admin.
+              </p>
+            )}
+
+            <div className="mt-4 grid gap-3 sm:grid-cols-2">
+              <input
+                type="text"
+                value={newItem.name}
+                onChange={(e) => setNewItem((current) => ({ ...current, name: e.target.value }))}
+                placeholder="Nome"
+                disabled={isCreating || !hasCategories}
+                className="rounded-lg border border-black px-4 py-3 text-base"
+              />
+
+              <input
+                type="number"
+                min="0"
+                step="0.01"
+                value={newItem.price}
+                onChange={(e) => setNewItem((current) => ({ ...current, price: e.target.value }))}
+                placeholder="Prezzo"
+                disabled={isCreating || !hasCategories}
+                className="rounded-lg border border-black px-4 py-3 text-base"
+              />
+
+              <select
+                value={newItem.categoryId}
+                onChange={(e) =>
+                  setNewItem((current) => ({ ...current, categoryId: e.target.value }))
+                }
+                disabled={isCreating || !hasCategories}
+                className="rounded-lg border border-black px-4 py-3 text-base"
+              >
+                <option value="">Seleziona categoria</option>
+                {categories.map((category) => (
+                  <option key={category.id} value={category.id}>
+                    {category.name}
+                  </option>
+                ))}
+              </select>
+
+              <label className="flex items-center gap-2 rounded-lg border border-black px-4 py-3 text-sm font-semibold text-black">
+                <input
+                  type="checkbox"
+                  checked={newItem.isAvailable}
+                  onChange={(e) =>
+                    setNewItem((current) => ({ ...current, isAvailable: e.target.checked }))
+                  }
+                  disabled={isCreating || !hasCategories}
+                />
+                Disponibile
+              </label>
+
+              <textarea
+                value={newItem.description}
+                onChange={(e) =>
+                  setNewItem((current) => ({ ...current, description: e.target.value }))
+                }
+                placeholder="Descrizione (opzionale)"
+                disabled={isCreating || !hasCategories}
+                rows={3}
+                className="sm:col-span-2 rounded-lg border border-black px-4 py-3 text-base"
+              />
+
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => setNewItemImageFile(e.target.files?.[0] ?? null)}
+                disabled={isCreating || !hasCategories}
+                className="sm:col-span-2 rounded-lg border border-black px-4 py-3 text-base"
+              />
+            </div>
+
+            <div className="mt-4 flex flex-wrap justify-end gap-2">
+              <button
+                type="button"
+                onClick={() => {
+                  if (isCreating) return
+                  setIsCreateModalOpen(false)
+                }}
+                disabled={isCreating}
+                className="rounded-xl border border-black bg-white px-5 py-3 text-base font-bold text-black transition hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                Annulla
+              </button>
+              <button
+                type="button"
+                onClick={createItem}
+                disabled={isCreating || !hasCategories}
+                className="rounded-xl bg-black px-5 py-3 text-base font-bold text-white transition hover:bg-stone-800 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                {isCreating ? 'Creazione...' : 'Aggiungi prodotto'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className="space-y-4">
         {sortedItems.length === 0 ? (
           <div className="rounded-2xl border border-black bg-white p-8 text-center text-gray-600">
-            Nessun menu item presente
+            Nessun prodotto presente
           </div>
         ) : (
           sortedItems.map((item) => {
