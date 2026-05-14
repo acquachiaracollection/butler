@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 type Category = {
   id: number
@@ -61,6 +61,8 @@ const parseNumericId = (value: unknown): number | null => {
 }
 
 export function InventoryManager({ initialMenuItems, categories }: InventoryManagerProps) {
+  const ITEMS_PER_PAGE = 5
+
   const [menuItems, setMenuItems] = useState<InventoryItem[]>(initialMenuItems)
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
   const [newItem, setNewItem] = useState<NewItemForm>(initialNewItemForm)
@@ -69,12 +71,41 @@ export function InventoryManager({ initialMenuItems, categories }: InventoryMana
   const [savingIds, setSavingIds] = useState<number[]>([])
   const [deletingIds, setDeletingIds] = useState<number[]>([])
   const [pendingImageFiles, setPendingImageFiles] = useState<Record<number, File | null>>({})
+  const [searchTerm, setSearchTerm] = useState('')
+  const [currentPage, setCurrentPage] = useState(1)
 
   const hasCategories = categories.length > 0
 
-  const sortedItems = useMemo(() => {
-    return [...menuItems].sort((a, b) => a.name.localeCompare(b.name, 'it-IT'))
-  }, [menuItems])
+  const filteredAndSortedItems = useMemo(() => {
+    const normalizedQuery = searchTerm.trim().toLocaleLowerCase('it-IT')
+
+    return [...menuItems]
+      .filter((item) => {
+        if (!normalizedQuery) return true
+
+        const searchableText = [item.name, item.description, item.categoryName]
+          .join(' ')
+          .toLocaleLowerCase('it-IT')
+
+        return searchableText.includes(normalizedQuery)
+      })
+      .sort((a, b) => a.name.localeCompare(b.name, 'it-IT'))
+  }, [menuItems, searchTerm])
+
+  const totalPages = Math.max(1, Math.ceil(filteredAndSortedItems.length / ITEMS_PER_PAGE))
+  const pageNumbers = Array.from({ length: totalPages }, (_, i) => i + 1)
+  const pageStart = (currentPage - 1) * ITEMS_PER_PAGE
+  const paginatedItems = filteredAndSortedItems.slice(pageStart, pageStart + ITEMS_PER_PAGE)
+
+  useEffect(() => {
+    setCurrentPage(1)
+  }, [searchTerm])
+
+  useEffect(() => {
+    if (currentPage > totalPages) {
+      setCurrentPage(totalPages)
+    }
+  }, [currentPage, totalPages])
 
   const setItemSaving = (id: number, value: boolean) => {
     setSavingIds((current) =>
@@ -100,6 +131,11 @@ export function InventoryManager({ initialMenuItems, categories }: InventoryMana
 
   const setPendingImageFile = (id: number, file: File | null) => {
     setPendingImageFiles((current) => ({ ...current, [id]: file }))
+  }
+
+  const handlePageChange = (nextPage: number) => {
+    if (nextPage < 1 || nextPage > totalPages) return
+    setCurrentPage(nextPage)
   }
 
   const uploadMedia = async (file: File) => {
@@ -265,7 +301,14 @@ export function InventoryManager({ initialMenuItems, categories }: InventoryMana
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-end">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <input
+          type="search"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          placeholder="Cerca per nome, descrizione o categoria"
+          className="w-full rounded-xl border border-black bg-white px-4 py-3 text-base sm:max-w-md"
+        />
         <button
           type="button"
           onClick={() => setIsCreateModalOpen(true)}
@@ -395,12 +438,14 @@ export function InventoryManager({ initialMenuItems, categories }: InventoryMana
       )}
 
       <div className="space-y-4">
-        {sortedItems.length === 0 ? (
+        {filteredAndSortedItems.length === 0 ? (
           <div className="rounded-2xl border border-black bg-white p-8 text-center text-gray-600">
-            Nessun prodotto presente
+            {searchTerm.trim()
+              ? 'Nessun prodotto trovato per la ricerca inserita'
+              : 'Nessun prodotto presente'}
           </div>
         ) : (
-          sortedItems.map((item) => {
+          paginatedItems.map((item) => {
             const isSaving = savingIds.includes(item.id)
             const isDeleting = deletingIds.includes(item.id)
 
@@ -511,6 +556,46 @@ export function InventoryManager({ initialMenuItems, categories }: InventoryMana
               </div>
             )
           })
+        )}
+
+        {filteredAndSortedItems.length > ITEMS_PER_PAGE && (
+          <div className="flex flex-col items-center gap-3 py-2">
+            <div className="flex flex-wrap justify-center gap-2">
+              {pageNumbers.map((page) => (
+                <button
+                  key={page}
+                  type="button"
+                  onClick={() => handlePageChange(page)}
+                  className={`min-h-12 min-w-12 rounded-xl px-4 py-2 text-sm font-bold transition ${
+                    currentPage === page
+                      ? 'bg-black text-white'
+                      : 'border border-black bg-white text-black hover:bg-gray-100'
+                  }`}
+                >
+                  {page}
+                </button>
+              ))}
+            </div>
+
+            <div className="grid w-full max-w-md grid-cols-2 gap-3">
+              <button
+                type="button"
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage === 1}
+                className="min-h-12 rounded-xl border border-black bg-white px-5 py-3 text-sm font-bold text-black transition hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-40"
+              >
+                Precedente
+              </button>
+              <button
+                type="button"
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage === totalPages}
+                className="min-h-12 rounded-xl bg-black px-5 py-3 text-sm font-bold text-white transition hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-40"
+              >
+                Successiva
+              </button>
+            </div>
+          </div>
         )}
       </div>
     </div>

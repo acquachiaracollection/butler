@@ -38,7 +38,10 @@ export async function PATCH(
       return NextResponse.json({ message: 'Nessun campo da aggiornare' }, { status: 400 })
     }
 
-    if (status !== undefined && !['pending', 'preparing', 'completed', 'canceled'].includes(status)) {
+    if (
+      status !== undefined &&
+      !['pending', 'preparing', 'completed', 'canceled'].includes(status)
+    ) {
       return NextResponse.json({ message: 'Invalid status' }, { status: 400 })
     }
 
