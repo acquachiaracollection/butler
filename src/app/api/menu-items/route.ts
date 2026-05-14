@@ -24,18 +24,22 @@ export async function POST(request: NextRequest) {
     const price = Number(body?.price)
     const category = Number(body?.category)
     const isAvailable = Boolean(body?.isAvailable)
-      let image = null;
-      if (body?.image !== null && body?.image !== undefined && body?.image !== '') {
-        // Accetta sia numeri che stringhe numeriche positive
-        if (typeof body.image === 'number' && body.image > 0) {
-          image = body.image;
-        } else if (typeof body.image === 'string' && /^\d+$/.test(body.image) && Number(body.image) > 0) {
-          image = Number(body.image);
-        } else {
-          console.log('Image validation failed, value:', body.image);
-          return NextResponse.json({ message: 'Immagine non valida' }, { status: 400 });
-        }
+    let image = null
+    if (body?.image !== null && body?.image !== undefined && body?.image !== '') {
+      // Accetta sia numeri che stringhe numeriche positive
+      if (typeof body.image === 'number' && body.image > 0) {
+        image = body.image
+      } else if (
+        typeof body.image === 'string' &&
+        /^\d+$/.test(body.image) &&
+        Number(body.image) > 0
+      ) {
+        image = Number(body.image)
+      } else {
+        console.log('Image validation failed, value:', body.image)
+        return NextResponse.json({ message: 'Immagine non valida' }, { status: 400 })
       }
+    }
 
     if (!name) {
       return NextResponse.json({ message: 'Nome menu item obbligatorio' }, { status: 400 })
