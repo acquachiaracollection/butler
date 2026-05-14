@@ -1,67 +1,115 @@
-# Payload Blank Template
+# Butler - Acqua Chiara
 
-This template comes configured with the bare minimum to get started on anything you need.
+Applicazione Next.js + Payload CMS per la gestione operativa del ristoro degli ospiti:
 
-## Quick start
+- kiosk ordini lato cliente
+- dashboard staff protetta
+- gestione ordini con stati e staff notes
+- gestione inventario prodotti con immagini, ricerca e paginazione
 
-This template can be deployed directly from our Cloud hosting and it will setup MongoDB and cloud S3 object storage for media.
+## Stack
 
-## Quick Start - local setup
+- Next.js 16
+- Payload CMS 3
+- Database Postgres (adapter Payload Postgres)
+- UI React 19
 
-To spin up this template locally, follow these steps:
+## Funzionalita principali
 
-### Clone
+### Frontend pubblico
 
-After you click the `Deploy` button above, you'll want to have standalone copy of this repo on your machine. If you've already cloned this repo, skip to [Development](#development).
+- Pagina ordini su /order
+- Visualizzazione prodotti disponibili
+- Invio ordine con note ordine e note per singolo articolo
 
-### Development
+### Area staff (protetta)
 
-1. First [clone the repo](#clone) if you have not done so already
-2. `cd my-project && cp .env.example .env` to copy the example environment variables. You'll need to add the `MONGODB_URL` from your Cloud project to your `.env` if you want to use S3 storage and the MongoDB database that was created for you.
+- Login su /login
+- Redirect automatico a /dashboard dopo login riuscito
+- Dashboard su /dashboard con accesso rapido a:
+  - /manage
+  - /inventory
 
-3. `pnpm install && pnpm dev` to install dependencies and start the dev server
-4. open `http://localhost:3000` to open the app in your browser
+### Gestione ordini
 
-That's it! Changes made in `./src` will be reflected in your app. Follow the on-screen instructions to login and create your first admin user. Then check out [Production](#production) once you're ready to build and serve your app, and [Deployment](#deployment) when you're ready to go live.
+- Visualizzazione ordini con stato (in attesa, in preparazione, completato, annullato)
+- Cambio stato ordine dal frontend manage
+- Campo staff notes in collection orders e in UI manage
+- Paginazione ordini
 
-#### Docker (Optional)
+### Gestione inventario
 
-If you prefer to use Docker for local development instead of a local MongoDB instance, the provided docker-compose.yml file can be used.
+- CRUD prodotti (nome, prezzo, categoria, disponibilita, descrizione, immagine)
+- Upload immagine su media
+- Ricerca prodotti (nome, descrizione, categoria)
+- Paginazione prodotti
 
-To do so, follow these steps:
+## Collections Payload
 
-- Modify the `MONGODB_URL` in your `.env` file to `mongodb://127.0.0.1/<dbname>`
-- Modify the `docker-compose.yml` file's `MONGODB_URL` to match the above `<dbname>`
-- Run `docker-compose up` to start the database, optionally pass `-d` to run in the background.
+- users
+- media
+- menu-categories
+- menu-items
+- orders
 
-## How it works
+Il campo staff notes e presente nella collection orders come staffNotes.
 
-The Payload config is tailored specifically to the needs of most websites. It is pre-configured in the following ways:
+## Setup locale
 
-### Collections
+1. Copia variabili ambiente
 
-See the [Collections](https://payloadcms.com/docs/configuration/collections) docs for details on how to extend this functionality.
+   cp .env.example .env
 
-- #### Users (Authentication)
+2. Configura almeno queste variabili in .env
 
-  Users are auth-enabled collections that have access to the admin panel.
+- DATABASE_URL
+- PAYLOAD_SECRET
 
-  For additional help, see the official [Auth Example](https://github.com/payloadcms/payload/tree/3.x/examples/auth) or the [Authentication](https://payloadcms.com/docs/authentication/overview#authentication-overview) docs.
+Facoltative per email SMTP:
 
-- #### Media
+- SMTP_HOST
+- SMTP_PORT
+- SMTP_USER
+- SMTP_PASS
+- SMTP_FROM_ADDRESS
+- SMTP_FROM_NAME
 
-  This is the uploads enabled collection. It features pre-configured sizes, focal point and manual resizing to help you manage your pictures.
+Nota: la configurazione corrente usa Postgres. Imposta DATABASE_URL in formato Postgres, ad esempio:
 
-### Docker
+postgres://user:password@localhost:5432/butler
 
-Alternatively, you can use [Docker](https://www.docker.com) to spin up this template locally. To do so, follow these steps:
+3. Installa dipendenze
 
-1. Follow [steps 1 and 2 from above](#development), the docker-compose file will automatically use the `.env` file in your project root
-1. Next run `docker-compose up`
-1. Follow [steps 4 and 5 from above](#development) to login and create your first admin user
+   pnpm install
 
-That's it! The Docker instance will help you get up and running quickly while also standardizing the development environment across your teams.
+4. Avvia in sviluppo
 
-## Questions
+   pnpm dev
 
-If you have any issues or questions, reach out to us on [Discord](https://discord.com/invite/payload) or start a [GitHub discussion](https://github.com/payloadcms/payload/discussions).
+5. Apri
+
+http://localhost:3000
+
+## Script utili
+
+- pnpm dev
+- pnpm build
+- pnpm start
+- pnpm generate:types
+- pnpm generate:importmap
+- pnpm test
+- pnpm test:int
+- pnpm test:e2e
+
+## Testing
+
+- Test integrazione in tests/int
+- Test end-to-end in tests/e2e
+
+## Note operative
+
+- Se modifichi le collections Payload, rigenera i tipi con:
+
+  pnpm payload generate:types
+
+- Le pagine staff richiedono autenticazione; in caso contrario redirect su /login.
