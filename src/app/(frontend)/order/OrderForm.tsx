@@ -119,20 +119,20 @@ export function OrderForm({ menuItems }: OrderFormProps) {
   if (state.status === 'success') {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center gap-6 px-6 py-12 text-center">
-        <div className="rounded-full bg-emerald-100 px-4 py-2 text-sm font-semibold text-emerald-800">
+        <div className="rounded-full bg-black px-4 py-2 text-sm font-semibold text-white">
           Ordine confermato
         </div>
-        <h2 className="text-5xl leading-none [font-family:var(--font-title)] text-stone-900 sm:text-6xl">
+        <h2 className="text-5xl leading-none [font-family:var(--font-title)] text-black sm:text-6xl">
           Grazie!
         </h2>
-        <p className="max-w-md text-lg text-stone-600">{state.message}</p>
+        <p className="max-w-md text-lg text-gray-600">{state.message}</p>
         <button
           type="button"
           onClick={() => {
             setRows([])
             setOrderNote('')
           }}
-          className="mt-4 rounded-2xl bg-emerald-700 px-8 py-4 text-lg font-semibold text-white transition hover:bg-emerald-800"
+          className="mt-4 rounded-2xl bg-black px-8 py-4 text-lg font-semibold text-white transition hover:bg-stone-800"
         >
           Nuovo ordine
         </button>
@@ -156,14 +156,14 @@ export function OrderForm({ menuItems }: OrderFormProps) {
         <div className="space-y-6 p-6 sm:p-8">
           {/* Menu items grid */}
           <div className="space-y-3">
-            <h2 className="text-2xl font-semibold text-stone-900 [font-family:var(--font-title)] sm:text-3xl">
+            <h2 className="text-2xl font-semibold text-black [font-family:var(--font-title)] sm:text-3xl">
               Scegli i tuoi piatti
             </h2>
-            <p className="text-sm text-stone-600">Tocca una card per aggiungere all'ordine.</p>
+            <p className="text-sm text-gray-600">Tocca una card per aggiungere all'ordine.</p>
           </div>
 
           {menuItems.length === 0 ? (
-            <div className="rounded-2xl border border-amber-200 bg-amber-50 p-6 text-base text-amber-900">
+            <div className="rounded-2xl border border-black bg-white p-6 text-base text-black">
               Nessun piatto disponibile al momento.
             </div>
           ) : (
@@ -174,7 +174,7 @@ export function OrderForm({ menuItems }: OrderFormProps) {
                   type="button"
                   onClick={() => addMenuItem(item.id)}
                   disabled={pending || submitLocked}
-                  className="group flex flex-col overflow-hidden rounded-2xl border border-stone-200 bg-white text-left transition hover:border-emerald-400 hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-50"
+                  className="group flex flex-col overflow-hidden rounded-2xl border border-black bg-white text-left transition hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   {/* Image */}
                   <div className="relative aspect-4/3 w-full bg-stone-100">
@@ -195,13 +195,11 @@ export function OrderForm({ menuItems }: OrderFormProps) {
 
                   {/* Info */}
                   <div className="space-y-1 p-3">
-                    <p className="text-sm font-semibold text-stone-900 line-clamp-2">{item.name}</p>
+                    <p className="text-sm font-semibold text-black line-clamp-2">{item.name}</p>
                     {item.description ? (
-                      <p className="text-xs text-stone-500 line-clamp-1">{item.description}</p>
+                      <p className="text-xs text-gray-600 line-clamp-1">{item.description}</p>
                     ) : null}
-                    <p className="pt-1 text-sm font-bold text-emerald-700">
-                      {formatEuro(item.price)}
-                    </p>
+                    <p className="pt-1 text-sm font-bold text-black">{formatEuro(item.price)}</p>
                   </div>
                 </button>
               ))}
@@ -210,14 +208,14 @@ export function OrderForm({ menuItems }: OrderFormProps) {
 
           {/* Cart section */}
           {rows.length > 0 ? (
-            <div className="space-y-3 border-t border-stone-200 pt-6">
+            <div className="space-y-3 border-t border-black pt-6">
               <div className="flex items-center justify-between gap-3">
-                <h3 className="text-lg font-semibold text-stone-900">Il tuo ordine</h3>
+                <h3 className="text-lg font-semibold text-black">Il tuo ordine</h3>
                 <button
                   type="button"
                   onClick={clearCart}
                   disabled={pending || submitLocked}
-                  className="rounded-full border border-stone-300 px-3 py-1.5 text-xs font-semibold text-stone-700 transition hover:border-stone-500 hover:text-stone-900 disabled:opacity-50"
+                  className="rounded-full border border-black px-3 py-1.5 text-xs font-semibold text-black transition hover:bg-black hover:text-white disabled:opacity-50"
                 >
                   Svuota
                 </button>
@@ -230,12 +228,12 @@ export function OrderForm({ menuItems }: OrderFormProps) {
                   return (
                     <div
                       key={`${row.menuItemId}-${idx}`}
-                      className="flex items-start gap-3 rounded-xl border border-stone-200 bg-stone-50 p-3"
+                      className="flex items-start gap-3 rounded-xl border border-black bg-white p-3"
                     >
                       {/* Item info */}
                       <div className="min-w-0 flex-1">
-                        <p className="font-semibold text-stone-900">{item?.name}</p>
-                        <p className="text-sm text-stone-500">
+                        <p className="font-semibold text-black">{item?.name}</p>
+                        <p className="text-sm text-gray-600">
                           {formatEuro((item?.price ?? 0) * row.quantity)}
                         </p>
 
@@ -255,9 +253,9 @@ export function OrderForm({ menuItems }: OrderFormProps) {
                               )
                             }}
                             disabled={pending || submitLocked}
-                            className="w-20 rounded-lg border-2 border-stone-300 bg-white px-3 py-2 text-center text-base font-semibold outline-none transition focus:border-emerald-600 focus:ring-2 focus:ring-emerald-200"
+                            className="w-20 rounded-lg border-2 border-black bg-white px-3 py-2 text-center text-base font-semibold outline-none transition focus:border-black focus:ring-2 focus:ring-gray-300"
                           />
-                          <span className="text-sm font-semibold text-stone-600">×</span>
+                          <span className="text-sm font-semibold text-black">×</span>
                         </div>
 
                         {/* Note */}
@@ -268,7 +266,7 @@ export function OrderForm({ menuItems }: OrderFormProps) {
                           onChange={(e) => updateRow(idx, 'note', e.target.value)}
                           placeholder="Es. senza panna, extra aglio..."
                           disabled={pending || submitLocked}
-                          className="mt-3 w-full rounded-lg border-2 border-stone-300 bg-white px-4 py-3 text-base outline-none transition focus:border-emerald-600 focus:ring-2 focus:ring-emerald-200 placeholder-stone-400"
+                          className="mt-3 w-full rounded-lg border-2 border-black bg-white px-4 py-3 text-base outline-none transition focus:border-black focus:ring-2 focus:ring-gray-300 placeholder-gray-500"
                         />
                       </div>
 
@@ -277,7 +275,7 @@ export function OrderForm({ menuItems }: OrderFormProps) {
                         type="button"
                         onClick={() => removeRow(idx)}
                         disabled={pending || submitLocked}
-                        className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg border-2 border-stone-300 text-2xl font-semibold text-stone-600 transition hover:border-red-400 hover:bg-red-50 hover:text-red-600 active:bg-red-100 disabled:opacity-50"
+                        className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg border-2 border-black text-2xl font-semibold text-black transition hover:bg-black hover:text-white active:bg-stone-800 disabled:opacity-50"
                       >
                         ×
                       </button>
@@ -287,8 +285,8 @@ export function OrderForm({ menuItems }: OrderFormProps) {
               </div>
 
               {/* Order notes */}
-              <div className="space-y-3 border-t border-stone-200 pt-4">
-                <label className="block text-base font-semibold text-stone-900">
+              <div className="space-y-3 pt-4">
+                <label className="block text-base font-semibold text-black">
                   Note aggiuntive (opzionale)
                 </label>
                 <textarea
@@ -298,7 +296,7 @@ export function OrderForm({ menuItems }: OrderFormProps) {
                   onChange={(e) => setOrderNote(e.target.value)}
                   placeholder="Es. citofono, allergie, preferenze speciali..."
                   disabled={pending || submitLocked}
-                  className="w-full resize-none rounded-lg border-2 border-stone-300 bg-white px-4 py-3 text-base outline-none transition focus:border-emerald-600 focus:ring-2 focus:ring-emerald-200 placeholder-stone-400"
+                  className="w-full resize-none rounded-lg border-2 border-black bg-white px-4 py-3 text-base outline-none transition focus:border-black focus:ring-2 focus:ring-gray-300 placeholder-gray-500"
                 />
               </div>
             </div>
@@ -306,7 +304,7 @@ export function OrderForm({ menuItems }: OrderFormProps) {
 
           {/* Error message */}
           {state.status === 'error' && state.message ? (
-            <div className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-800">
+            <div className="rounded-xl border border-black bg-white p-4 text-sm text-black">
               {state.message}
             </div>
           ) : null}
@@ -314,11 +312,11 @@ export function OrderForm({ menuItems }: OrderFormProps) {
       </div>
 
       {/* Fixed footer */}
-      <div className="fixed inset-x-0 bottom-0 z-30 border-t border-stone-200 bg-white/98 p-4 shadow-[0_-10px_40px_rgba(0,0,0,0.1)] backdrop-blur sm:px-8">
+      <div className="fixed inset-x-0 bottom-0 z-30 border-t border-black bg-white/98 p-4 shadow-[0_-10px_40px_rgba(0,0,0,0.1)] backdrop-blur sm:px-8">
         <div className="mx-auto flex w-full max-w-7xl items-stretch gap-4">
           {/* Total */}
-          <div className="flex-1 rounded-xl bg-stone-900 px-4 py-3 text-white sm:px-6 sm:py-4">
-            <p className="text-xs uppercase tracking-widest text-stone-400">Totale</p>
+          <div className="flex-1 rounded-xl bg-black px-4 py-3 text-white sm:px-6 sm:py-4">
+            <p className="text-xs uppercase tracking-widest text-gray-400">Totale</p>
             <p className="mt-1 text-2xl font-bold sm:text-3xl">{formatEuro(total)}</p>
           </div>
 
@@ -326,7 +324,7 @@ export function OrderForm({ menuItems }: OrderFormProps) {
           <button
             type="submit"
             disabled={pending || submitLocked || rows.length === 0}
-            className="min-w-48 flex items-center justify-center rounded-xl bg-emerald-600 px-6 text-base font-bold text-white transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:bg-stone-400 sm:min-w-56 sm:text-lg"
+            className="min-w-48 flex items-center justify-center rounded-xl bg-emerald-600 px-6 text-base font-bold text-white transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:bg-gray-400 sm:min-w-56 sm:text-lg"
           >
             {pending || submitLocked ? 'Invio...' : 'Conferma'}
           </button>
