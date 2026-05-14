@@ -230,6 +230,23 @@ export function OrderForm({ menuItems }: OrderFormProps) {
                       key={`${row.menuItemId}-${idx}`}
                       className="flex items-start gap-3 rounded-xl border border-black bg-white p-3"
                     >
+                      {/* Item image */}
+                      <div className="relative h-12 w-12 shrink-0 rounded-lg">
+                        {item?.imageUrl ? (
+                          <Image
+                            src={item.imageUrl}
+                            alt={item.name}
+                            fill
+                            sizes="48px"
+                            className="object-contain"
+                          />
+                        ) : (
+                          <div className="flex h-full items-center justify-center text-xs font-medium text-gray-500">
+                            No img
+                          </div>
+                        )}
+                      </div>
+
                       {/* Item info */}
                       <div className="min-w-0 flex-1">
                         <p className="font-semibold text-black">{item?.name}</p>
@@ -275,7 +292,7 @@ export function OrderForm({ menuItems }: OrderFormProps) {
                         type="button"
                         onClick={() => removeRow(idx)}
                         disabled={pending || submitLocked}
-                        className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg border-2 border-black text-2xl font-semibold text-black transition hover:bg-black hover:text-white active:bg-stone-800 disabled:opacity-50"
+                        className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg border-2 border-black text-2xl font-semibold text-black transition hover:bg-red-600 hover:text-white active:bg-red-700 disabled:opacity-50"
                       >
                         ×
                       </button>
