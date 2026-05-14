@@ -240,7 +240,7 @@ export function OrderForm({ menuItems }: OrderFormProps) {
                         </p>
 
                         {/* Quantity */}
-                        <div className="mt-2 flex items-center gap-2">
+                        <div className="mt-3 flex items-center gap-2">
                           <input
                             type="number"
                             min="1"
@@ -255,9 +255,9 @@ export function OrderForm({ menuItems }: OrderFormProps) {
                               )
                             }}
                             disabled={pending || submitLocked}
-                            className="w-14 rounded-lg border border-stone-300 bg-white px-2 py-1 text-center text-sm outline-none focus:border-emerald-600"
+                            className="w-20 rounded-lg border-2 border-stone-300 bg-white px-3 py-2 text-center text-base font-semibold outline-none transition focus:border-emerald-600 focus:ring-2 focus:ring-emerald-200"
                           />
-                          <span className="text-xs text-stone-500">×</span>
+                          <span className="text-sm font-semibold text-stone-600">×</span>
                         </div>
 
                         {/* Note */}
@@ -266,9 +266,9 @@ export function OrderForm({ menuItems }: OrderFormProps) {
                           value={row.note}
                           maxLength={80}
                           onChange={(e) => updateRow(idx, 'note', e.target.value)}
-                          placeholder="Nota (es. senza..."
+                          placeholder="Es. senza panna, extra aglio..."
                           disabled={pending || submitLocked}
-                          className="mt-2 w-full rounded-lg border border-stone-300 bg-white px-2 py-1 text-xs outline-none focus:border-emerald-600"
+                          className="mt-3 w-full rounded-lg border-2 border-stone-300 bg-white px-4 py-3 text-base outline-none transition focus:border-emerald-600 focus:ring-2 focus:ring-emerald-200 placeholder-stone-400"
                         />
                       </div>
 
@@ -277,7 +277,7 @@ export function OrderForm({ menuItems }: OrderFormProps) {
                         type="button"
                         onClick={() => removeRow(idx)}
                         disabled={pending || submitLocked}
-                        className="flex h-8 w-8 items-center justify-center rounded-lg border border-stone-300 text-sm font-semibold text-stone-600 transition hover:border-red-400 hover:bg-red-50 hover:text-red-600 disabled:opacity-50"
+                        className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg border-2 border-stone-300 text-2xl font-semibold text-stone-600 transition hover:border-red-400 hover:bg-red-50 hover:text-red-600 active:bg-red-100 disabled:opacity-50"
                       >
                         ×
                       </button>
@@ -287,16 +287,18 @@ export function OrderForm({ menuItems }: OrderFormProps) {
               </div>
 
               {/* Order notes */}
-              <div className="space-y-2 border-t border-stone-200 pt-3">
-                <label className="block text-sm font-semibold text-stone-700">Note ordine</label>
+              <div className="space-y-3 border-t border-stone-200 pt-4">
+                <label className="block text-base font-semibold text-stone-900">
+                  Note aggiuntive (opzionale)
+                </label>
                 <textarea
                   value={orderNote}
                   maxLength={200}
-                  rows={2}
+                  rows={3}
                   onChange={(e) => setOrderNote(e.target.value)}
-                  placeholder="Es. citofono, allergie, preferenze..."
+                  placeholder="Es. citofono, allergie, preferenze speciali..."
                   disabled={pending || submitLocked}
-                  className="w-full resize-none rounded-lg border border-stone-300 bg-white px-3 py-2 text-sm outline-none focus:border-emerald-600"
+                  className="w-full resize-none rounded-lg border-2 border-stone-300 bg-white px-4 py-3 text-base outline-none transition focus:border-emerald-600 focus:ring-2 focus:ring-emerald-200 placeholder-stone-400"
                 />
               </div>
             </div>
