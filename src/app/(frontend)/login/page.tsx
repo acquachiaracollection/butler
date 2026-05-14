@@ -1,4 +1,5 @@
 import { Cormorant_Garamond, Manrope } from 'next/font/google'
+import type { Metadata } from 'next'
 import configPromise from '@payload-config'
 import { getPayload } from 'payload'
 import { redirect } from 'next/navigation'
@@ -17,6 +18,10 @@ const bodyFont = Manrope({
 })
 
 export const dynamic = 'force-dynamic'
+
+export const metadata: Metadata = {
+  title: 'Login Staff | Acqua Chiara',
+}
 
 export default async function LoginPage() {
   const payload = await getPayload({ config: configPromise })

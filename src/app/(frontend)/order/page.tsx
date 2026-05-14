@@ -1,6 +1,7 @@
 import configPromise from '@payload-config'
 import { getPayload } from 'payload'
 import { Cormorant_Garamond, Manrope } from 'next/font/google'
+import type { Metadata } from 'next'
 import { OrderForm } from './OrderForm'
 
 const titleFont = Cormorant_Garamond({
@@ -16,6 +17,10 @@ const bodyFont = Manrope({
 })
 
 export const dynamic = 'force-dynamic'
+
+export const metadata: Metadata = {
+  title: 'Ordina | Acqua Chiara',
+}
 
 export default async function OrderPage() {
   const payload = await getPayload({ config: configPromise })

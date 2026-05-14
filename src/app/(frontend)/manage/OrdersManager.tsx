@@ -126,9 +126,7 @@ export function OrdersManager({ initialOrders }: OrdersManagerProps) {
           </p>
         </div>
         <div className="rounded-2xl border border-red-300 bg-red-50 p-4 sm:p-6">
-          <p className="text-sm font-semibold uppercase tracking-widest text-red-800">
-            Annullati
-          </p>
+          <p className="text-sm font-semibold uppercase tracking-widest text-red-800">Annullati</p>
           <p className="mt-2 text-3xl font-bold text-red-900 sm:text-4xl">
             {canceledOrders.length}
           </p>
