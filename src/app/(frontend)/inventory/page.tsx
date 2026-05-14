@@ -3,6 +3,7 @@ import { getPayload } from 'payload'
 import { Cormorant_Garamond, Manrope } from 'next/font/google'
 import type { Metadata } from 'next'
 import { headers } from 'next/headers'
+import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { InventoryManager } from './InventoryManager'
 
@@ -80,9 +81,17 @@ export default async function InventoryPage() {
     >
       <section className="mx-auto w-full max-w-6xl [font-family:var(--font-body)]">
         <header className="mb-6 overflow-hidden rounded-3xl border border-black bg-white/80 p-5 shadow-xl shadow-black/10 backdrop-blur sm:p-7">
-          <p className="text-xs uppercase tracking-[0.2em] text-black">
-            Acqua Chiara Collection - Villa Bismarck
-          </p>
+          <div className="flex items-center justify-between gap-3">
+            <p className="text-xs uppercase tracking-[0.2em] text-black">
+              Acqua Chiara Collection - Villa Bismarck
+            </p>
+            <Link
+              href="/dashboard"
+              className="rounded-lg border border-black px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.08em] text-black transition hover:bg-black hover:text-white"
+            >
+              Torna alla dashboard
+            </Link>
+          </div>
 
           <h1 className="mt-3 text-4xl leading-none text-black [font-family:var(--font-title)] sm:text-6xl">
             Inventario Prodotti

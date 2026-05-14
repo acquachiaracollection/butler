@@ -33,7 +33,7 @@ export default async function LoginPage() {
       limit: 1,
     })
     // If able to read orders, user is authenticated
-    redirect('/manage')
+    redirect('/dashboard')
   } catch (error) {
     // User is not authenticated, continue to login page
   }

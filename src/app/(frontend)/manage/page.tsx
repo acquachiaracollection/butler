@@ -4,6 +4,7 @@ import { Cormorant_Garamond, Manrope } from 'next/font/google'
 import type { Metadata } from 'next'
 import { OrdersManager } from './OrdersManager'
 import { headers } from 'next/headers'
+import Link from 'next/link'
 import { redirect } from 'next/navigation'
 
 const titleFont = Cormorant_Garamond({
@@ -84,6 +85,12 @@ export default async function ManagePage() {
             <p className="text-xs uppercase tracking-[0.2em] text-black">
               Acqua Chiara Collection - Villa Bismarck
             </p>
+            <Link
+              href="/dashboard"
+              className="rounded-lg border border-black px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.08em] text-black transition hover:bg-black hover:text-white"
+            >
+              Torna alla dashboard
+            </Link>
           </div>
 
           <h1 className="mt-3 text-4xl leading-none text-black [font-family:var(--font-title)] sm:text-6xl">

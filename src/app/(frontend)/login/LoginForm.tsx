@@ -27,7 +27,7 @@ export function LoginForm() {
       const result = await response.json()
 
       if (response.ok && result.user) {
-        router.replace('/manage')
+        router.replace('/dashboard')
         router.refresh()
       } else {
         setError(result?.message || 'Email o password non corretti')
