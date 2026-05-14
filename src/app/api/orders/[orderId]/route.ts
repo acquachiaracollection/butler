@@ -32,7 +32,7 @@ export async function PATCH(
     const body = await request.json()
     const { status } = body
 
-    if (!['pending', 'preparing', 'completed'].includes(status)) {
+    if (!['pending', 'preparing', 'completed', 'canceled'].includes(status)) {
       return NextResponse.json({ message: 'Invalid status' }, { status: 400 })
     }
 

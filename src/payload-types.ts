@@ -210,7 +210,7 @@ export interface Order {
     id?: string | null;
   }[];
   note?: string | null;
-  status: 'pending' | 'preparing' | 'completed';
+  status: 'pending' | 'preparing' | 'completed' | 'canceled';
   handledBy?: (number | null) | User;
   updatedAt: string;
   createdAt: string;

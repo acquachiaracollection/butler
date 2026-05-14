@@ -65,6 +65,10 @@ export const Orders: CollectionConfig = {
           label: 'Completato',
           value: 'completed',
         },
+        {
+          label: 'Annullato',
+          value: 'canceled',
+        },
       ],
       access: {
         create: isAuthenticatedField,

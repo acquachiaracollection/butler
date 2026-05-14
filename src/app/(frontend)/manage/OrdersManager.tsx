@@ -18,7 +18,7 @@ type OrderItem = {
 
 type Order = {
   id: string | number
-  status: 'pending' | 'preparing' | 'completed'
+  status: 'pending' | 'preparing' | 'completed' | 'canceled'
   items: OrderItem[]
   note: string
   createdAt: string
@@ -34,6 +34,7 @@ const statusLabels: Record<string, { label: string; color: string }> = {
   pending: { label: 'In attesa', color: 'bg-yellow-100 text-yellow-800 border-yellow-300' },
   preparing: { label: 'In preparazione', color: 'bg-blue-100 text-blue-800 border-blue-300' },
   completed: { label: 'Completato', color: 'bg-green-100 text-green-800 border-green-300' },
+  canceled: { label: 'Annullato', color: 'bg-red-100 text-red-800 border-red-300' },
 }
 
 const formatEuro = (value: number) => {
@@ -85,6 +86,7 @@ export function OrdersManager({ initialOrders }: OrdersManagerProps) {
   const pendingOrders = orders.filter((o) => o.status === 'pending')
   const preparingOrders = orders.filter((o) => o.status === 'preparing')
   const completedOrders = orders.filter((o) => o.status === 'completed')
+  const canceledOrders = orders.filter((o) => o.status === 'canceled')
   const totalPages = Math.max(1, Math.ceil(orders.length / ORDERS_PER_PAGE))
   const pageNumbers = Array.from({ length: totalPages }, (_, i) => i + 1)
   const pageStart = (currentPage - 1) * ORDERS_PER_PAGE
@@ -98,7 +100,7 @@ export function OrdersManager({ initialOrders }: OrdersManagerProps) {
   return (
     <div className="space-y-6">
       {/* Summary cards */}
-      <div className="grid grid-cols-3 gap-4 sm:gap-6">
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-4 sm:gap-6">
         <div className="rounded-2xl border border-yellow-300 bg-yellow-50 p-4 sm:p-6">
           <p className="text-sm font-semibold uppercase tracking-widest text-yellow-800">
             In attesa
@@ -121,6 +123,14 @@ export function OrdersManager({ initialOrders }: OrdersManagerProps) {
           </p>
           <p className="mt-2 text-3xl font-bold text-green-900 sm:text-4xl">
             {completedOrders.length}
+          </p>
+        </div>
+        <div className="rounded-2xl border border-red-300 bg-red-50 p-4 sm:p-6">
+          <p className="text-sm font-semibold uppercase tracking-widest text-red-800">
+            Annullati
+          </p>
+          <p className="mt-2 text-3xl font-bold text-red-900 sm:text-4xl">
+            {canceledOrders.length}
           </p>
         </div>
       </div>
