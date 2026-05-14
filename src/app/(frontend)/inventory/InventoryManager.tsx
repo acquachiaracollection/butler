@@ -302,13 +302,19 @@ export function InventoryManager({ initialMenuItems, categories }: InventoryMana
   return (
     <div className="space-y-6">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <input
-          type="search"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          placeholder="Cerca per nome, descrizione o categoria"
-          className="w-full rounded-xl border border-black bg-white px-4 py-3 text-base sm:max-w-md"
-        />
+        <div className="w-full sm:max-w-md">
+          <label htmlFor="inventory-search" className="mb-1 block text-sm font-semibold text-black">
+            Cerca prodotti
+          </label>
+          <input
+            id="inventory-search"
+            type="search"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            placeholder="Cerca per nome, descrizione o categoria"
+            className="w-full rounded-xl border border-black bg-white px-4 py-3 text-base"
+          />
+        </div>
         <button
           type="button"
           onClick={() => setIsCreateModalOpen(true)}
@@ -344,72 +350,120 @@ export function InventoryManager({ initialMenuItems, categories }: InventoryMana
             )}
 
             <div className="mt-4 grid gap-3 sm:grid-cols-2">
-              <input
-                type="text"
-                value={newItem.name}
-                onChange={(e) => setNewItem((current) => ({ ...current, name: e.target.value }))}
-                placeholder="Nome"
-                disabled={isCreating || !hasCategories}
-                className="rounded-lg border border-black px-4 py-3 text-base"
-              />
-
-              <input
-                type="number"
-                min="0"
-                step="0.01"
-                value={newItem.price}
-                onChange={(e) => setNewItem((current) => ({ ...current, price: e.target.value }))}
-                placeholder="Prezzo"
-                disabled={isCreating || !hasCategories}
-                className="rounded-lg border border-black px-4 py-3 text-base"
-              />
-
-              <select
-                value={newItem.categoryId}
-                onChange={(e) =>
-                  setNewItem((current) => ({ ...current, categoryId: e.target.value }))
-                }
-                disabled={isCreating || !hasCategories}
-                className="rounded-lg border border-black px-4 py-3 text-base"
-              >
-                <option value="">Seleziona categoria</option>
-                {categories.map((category) => (
-                  <option key={category.id} value={category.id}>
-                    {category.name}
-                  </option>
-                ))}
-              </select>
-
-              <label className="flex items-center gap-2 rounded-lg border border-black px-4 py-3 text-sm font-semibold text-black">
+              <div>
+                <label
+                  htmlFor="new-item-name"
+                  className="mb-1 block text-sm font-semibold text-black"
+                >
+                  Nome
+                </label>
                 <input
-                  type="checkbox"
-                  checked={newItem.isAvailable}
+                  id="new-item-name"
+                  type="text"
+                  value={newItem.name}
+                  onChange={(e) => setNewItem((current) => ({ ...current, name: e.target.value }))}
+                  placeholder="Nome"
+                  disabled={isCreating || !hasCategories}
+                  className="w-full rounded-lg border border-black px-4 py-3 text-base"
+                />
+              </div>
+
+              <div>
+                <label
+                  htmlFor="new-item-price"
+                  className="mb-1 block text-sm font-semibold text-black"
+                >
+                  Prezzo
+                </label>
+                <input
+                  id="new-item-price"
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  value={newItem.price}
+                  onChange={(e) => setNewItem((current) => ({ ...current, price: e.target.value }))}
+                  placeholder="Prezzo"
+                  disabled={isCreating || !hasCategories}
+                  className="w-full rounded-lg border border-black px-4 py-3 text-base"
+                />
+              </div>
+
+              <div>
+                <label
+                  htmlFor="new-item-category"
+                  className="mb-1 block text-sm font-semibold text-black"
+                >
+                  Categoria
+                </label>
+                <select
+                  id="new-item-category"
+                  value={newItem.categoryId}
                   onChange={(e) =>
-                    setNewItem((current) => ({ ...current, isAvailable: e.target.checked }))
+                    setNewItem((current) => ({ ...current, categoryId: e.target.value }))
                   }
                   disabled={isCreating || !hasCategories}
+                  className="w-full rounded-lg border border-black px-4 py-3 text-base"
+                >
+                  <option value="">Seleziona categoria</option>
+                  {categories.map((category) => (
+                    <option key={category.id} value={category.id}>
+                      {category.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <fieldset className="rounded-lg border border-black px-4 py-3">
+                <legend className="px-1 text-sm font-semibold text-black">Disponibilita</legend>
+                <label className="flex items-center gap-2 text-sm font-semibold text-black">
+                  <input
+                    type="checkbox"
+                    checked={newItem.isAvailable}
+                    onChange={(e) =>
+                      setNewItem((current) => ({ ...current, isAvailable: e.target.checked }))
+                    }
+                    disabled={isCreating || !hasCategories}
+                  />
+                  Disponibile
+                </label>
+              </fieldset>
+
+              <div className="sm:col-span-2">
+                <label
+                  htmlFor="new-item-description"
+                  className="mb-1 block text-sm font-semibold text-black"
+                >
+                  Descrizione
+                </label>
+                <textarea
+                  id="new-item-description"
+                  value={newItem.description}
+                  onChange={(e) =>
+                    setNewItem((current) => ({ ...current, description: e.target.value }))
+                  }
+                  placeholder="Descrizione (opzionale)"
+                  disabled={isCreating || !hasCategories}
+                  rows={3}
+                  className="w-full rounded-lg border border-black px-4 py-3 text-base"
                 />
-                Disponibile
-              </label>
+              </div>
 
-              <textarea
-                value={newItem.description}
-                onChange={(e) =>
-                  setNewItem((current) => ({ ...current, description: e.target.value }))
-                }
-                placeholder="Descrizione (opzionale)"
-                disabled={isCreating || !hasCategories}
-                rows={3}
-                className="sm:col-span-2 rounded-lg border border-black px-4 py-3 text-base"
-              />
-
-              <input
-                type="file"
-                accept="image/*"
-                onChange={(e) => setNewItemImageFile(e.target.files?.[0] ?? null)}
-                disabled={isCreating || !hasCategories}
-                className="sm:col-span-2 rounded-lg border border-black px-4 py-3 text-base"
-              />
+              <div className="sm:col-span-2">
+                <label
+                  htmlFor="new-item-image"
+                  className="mb-1 block text-sm font-semibold text-black"
+                >
+                  Immagine prodotto
+                </label>
+                <input
+                  id="new-item-image"
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => setNewItemImageFile(e.target.files?.[0] ?? null)}
+                  disabled={isCreating || !hasCategories}
+                  className="w-full rounded-lg border border-black px-4 py-3 text-base"
+                />
+              </div>
             </div>
 
             <div className="mt-4 flex flex-wrap justify-end gap-2">
@@ -452,53 +506,92 @@ export function InventoryManager({ initialMenuItems, categories }: InventoryMana
             return (
               <div key={item.id} className="rounded-2xl border border-black bg-white p-4 sm:p-5">
                 <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-                  <input
-                    type="text"
-                    value={item.name}
-                    onChange={(e) => updateField(item.id, 'name', e.target.value)}
-                    className="rounded-lg border border-black px-3 py-2 text-base"
-                  />
-
-                  <input
-                    type="number"
-                    min="0"
-                    step="0.01"
-                    value={item.price}
-                    onChange={(e) => {
-                      const val = Number(e.target.value)
-                      updateField(item.id, 'price', Number.isFinite(val) ? Math.max(0, val) : 0)
-                    }}
-                    className="rounded-lg border border-black px-3 py-2 text-base"
-                  />
-
-                  <select
-                    value={item.categoryId}
-                    onChange={(e) => updateField(item.id, 'categoryId', Number(e.target.value))}
-                    className="rounded-lg border border-black px-3 py-2 text-base"
-                  >
-                    {categories.map((category) => (
-                      <option key={category.id} value={category.id}>
-                        {category.name}
-                      </option>
-                    ))}
-                  </select>
-
-                  <label className="flex items-center gap-2 rounded-lg border border-black px-3 py-2 text-sm font-semibold text-black">
+                  <div>
+                    <label
+                      htmlFor={`item-name-${item.id}`}
+                      className="mb-1 block text-sm font-semibold text-black"
+                    >
+                      Nome
+                    </label>
                     <input
-                      type="checkbox"
-                      checked={item.isAvailable}
-                      onChange={(e) => updateField(item.id, 'isAvailable', e.target.checked)}
+                      id={`item-name-${item.id}`}
+                      type="text"
+                      value={item.name}
+                      onChange={(e) => updateField(item.id, 'name', e.target.value)}
+                      className="w-full rounded-lg border border-black px-3 py-2 text-base"
                     />
-                    Disponibile
-                  </label>
+                  </div>
 
-                  <textarea
-                    value={item.description}
-                    onChange={(e) => updateField(item.id, 'description', e.target.value)}
-                    rows={2}
-                    placeholder="Descrizione"
-                    className="sm:col-span-2 lg:col-span-4 rounded-lg border border-black px-3 py-2 text-sm"
-                  />
+                  <div>
+                    <label
+                      htmlFor={`item-price-${item.id}`}
+                      className="mb-1 block text-sm font-semibold text-black"
+                    >
+                      Prezzo
+                    </label>
+                    <input
+                      id={`item-price-${item.id}`}
+                      type="number"
+                      min="0"
+                      step="0.01"
+                      value={item.price}
+                      onChange={(e) => {
+                        const val = Number(e.target.value)
+                        updateField(item.id, 'price', Number.isFinite(val) ? Math.max(0, val) : 0)
+                      }}
+                      className="w-full rounded-lg border border-black px-3 py-2 text-base"
+                    />
+                  </div>
+
+                  <div>
+                    <label
+                      htmlFor={`item-category-${item.id}`}
+                      className="mb-1 block text-sm font-semibold text-black"
+                    >
+                      Categoria
+                    </label>
+                    <select
+                      id={`item-category-${item.id}`}
+                      value={item.categoryId}
+                      onChange={(e) => updateField(item.id, 'categoryId', Number(e.target.value))}
+                      className="w-full rounded-lg border border-black px-3 py-2 text-base"
+                    >
+                      {categories.map((category) => (
+                        <option key={category.id} value={category.id}>
+                          {category.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <fieldset className="rounded-lg border border-black px-3 py-2">
+                    <legend className="px-1 text-sm font-semibold text-black">Disponibilita</legend>
+                    <label className="flex items-center gap-2 text-sm font-semibold text-black">
+                      <input
+                        type="checkbox"
+                        checked={item.isAvailable}
+                        onChange={(e) => updateField(item.id, 'isAvailable', e.target.checked)}
+                      />
+                      Disponibile
+                    </label>
+                  </fieldset>
+
+                  <div className="sm:col-span-2 lg:col-span-4">
+                    <label
+                      htmlFor={`item-description-${item.id}`}
+                      className="mb-1 block text-sm font-semibold text-black"
+                    >
+                      Descrizione
+                    </label>
+                    <textarea
+                      id={`item-description-${item.id}`}
+                      value={item.description}
+                      onChange={(e) => updateField(item.id, 'description', e.target.value)}
+                      rows={2}
+                      placeholder="Descrizione"
+                      className="w-full rounded-lg border border-black px-3 py-2 text-sm"
+                    />
+                  </div>
 
                   {item.imageUrl ? (
                     <div className="sm:col-span-2 lg:col-span-1 rounded-lg border border-black bg-gray-50 p-2">
@@ -514,12 +607,21 @@ export function InventoryManager({ initialMenuItems, categories }: InventoryMana
                     </div>
                   )}
 
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) => setPendingImageFile(item.id, e.target.files?.[0] ?? null)}
-                    className="rounded-lg border border-black px-3 py-2 text-sm"
-                  />
+                  <div>
+                    <label
+                      htmlFor={`item-image-${item.id}`}
+                      className="mb-1 block text-sm font-semibold text-black"
+                    >
+                      Immagine prodotto
+                    </label>
+                    <input
+                      id={`item-image-${item.id}`}
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => setPendingImageFile(item.id, e.target.files?.[0] ?? null)}
+                      className="w-full rounded-lg border border-black px-3 py-2 text-sm"
+                    />
+                  </div>
 
                   {pendingImageFiles[item.id] ? (
                     <p className="text-xs font-semibold text-gray-700">
