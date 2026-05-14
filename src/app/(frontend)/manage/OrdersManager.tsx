@@ -54,8 +54,10 @@ const formatDate = (dateString: string) => {
 }
 
 export function OrdersManager({ initialOrders }: OrdersManagerProps) {
+  const ORDERS_PER_PAGE = 5
   const [orders, setOrders] = useState<Order[]>(initialOrders)
   const [expandedOrderId, setExpandedOrderId] = useState<string | number | null>(null)
+  const [currentPage, setCurrentPage] = useState(1)
 
   const updateOrderStatus = async (orderId: string | number, newStatus: string) => {
     try {
@@ -83,6 +85,15 @@ export function OrdersManager({ initialOrders }: OrdersManagerProps) {
   const pendingOrders = orders.filter((o) => o.status === 'pending')
   const preparingOrders = orders.filter((o) => o.status === 'preparing')
   const completedOrders = orders.filter((o) => o.status === 'completed')
+  const totalPages = Math.max(1, Math.ceil(orders.length / ORDERS_PER_PAGE))
+  const pageNumbers = Array.from({ length: totalPages }, (_, i) => i + 1)
+  const pageStart = (currentPage - 1) * ORDERS_PER_PAGE
+  const paginatedOrders = orders.slice(pageStart, pageStart + ORDERS_PER_PAGE)
+
+  const handlePageChange = (nextPage: number) => {
+    setExpandedOrderId(null)
+    setCurrentPage(nextPage)
+  }
 
   return (
     <div className="space-y-6">
@@ -121,7 +132,7 @@ export function OrdersManager({ initialOrders }: OrdersManagerProps) {
             Nessun ordine ricevuto
           </div>
         ) : (
-          orders.map((order) => {
+          paginatedOrders.map((order) => {
             const total = order.items.reduce(
               (sum, item) => sum + (item.menuItem?.price ?? 0) * item.quantity,
               0,
@@ -204,15 +215,15 @@ export function OrdersManager({ initialOrders }: OrdersManagerProps) {
                     {/* Status selector */}
                     <div className="flex flex-col gap-3 border-t border-black pt-4 sm:flex-row sm:items-center sm:justify-between">
                       <div>
-                        <label className="block text-sm font-semibold text-black">
+                        <label className="block text-base font-semibold text-black sm:text-lg">
                           Cambia status:
                         </label>
-                        <div className="mt-2 flex gap-2">
+                        <div className="mt-3 grid grid-cols-1 gap-3 sm:flex sm:flex-wrap sm:gap-2">
                           {Object.entries(statusLabels).map(([statusValue, { label }]) => (
                             <button
                               key={statusValue}
                               onClick={() => updateOrderStatus(order.id, statusValue)}
-                              className={`rounded-lg px-3 py-2 text-xs font-semibold transition ${
+                              className={`min-h-14 rounded-xl px-5 py-3 text-sm font-bold transition sm:min-h-12 sm:text-base ${
                                 order.status === statusValue
                                   ? 'bg-black text-white'
                                   : 'border border-black bg-white text-black hover:bg-gray-100'
@@ -232,6 +243,46 @@ export function OrdersManager({ initialOrders }: OrdersManagerProps) {
               </div>
             )
           })
+        )}
+
+        {orders.length > ORDERS_PER_PAGE && (
+          <div className="flex flex-col items-center gap-3 py-2">
+            <div className="flex flex-wrap justify-center gap-2">
+              {pageNumbers.map((page) => (
+                <button
+                  key={page}
+                  type="button"
+                  onClick={() => handlePageChange(page)}
+                  className={`min-h-12 min-w-12 rounded-xl px-4 py-2 text-sm font-bold transition ${
+                    currentPage === page
+                      ? 'bg-black text-white'
+                      : 'border border-black bg-white text-black hover:bg-gray-100'
+                  }`}
+                >
+                  {page}
+                </button>
+              ))}
+            </div>
+
+            <div className="grid w-full max-w-md grid-cols-2 gap-3">
+              <button
+                type="button"
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage === 1}
+                className="min-h-12 rounded-xl border border-black bg-white px-5 py-3 text-sm font-bold text-black transition hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-40"
+              >
+                Precedente
+              </button>
+              <button
+                type="button"
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage === totalPages}
+                className="min-h-12 rounded-xl bg-black px-5 py-3 text-sm font-bold text-white transition hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-40"
+              >
+                Successiva
+              </button>
+            </div>
+          </div>
         )}
       </div>
     </div>

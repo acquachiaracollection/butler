@@ -40,6 +40,7 @@ export function OrderForm({ menuItems }: OrderFormProps) {
   const [submitLocked, setSubmitLocked] = useState(false)
   const [orderNote, setOrderNote] = useState('')
   const [rows, setRows] = useState<OrderRow[]>([])
+  const [showSuccessScreen, setShowSuccessScreen] = useState(false)
 
   const [state, formAction, pending] = useActionState(submitOrderAction, initialState)
 
@@ -47,6 +48,7 @@ export function OrderForm({ menuItems }: OrderFormProps) {
     if (state.status === 'success') {
       setRows([])
       setOrderNote('')
+      setShowSuccessScreen(true)
     }
 
     if (state.status !== 'idle') {
@@ -116,7 +118,7 @@ export function OrderForm({ menuItems }: OrderFormProps) {
   }
 
   // Success screen
-  if (state.status === 'success') {
+  if (showSuccessScreen) {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center gap-6 px-6 py-12 text-center">
         <div className="rounded-full bg-black px-4 py-2 text-sm font-semibold text-white">
@@ -131,6 +133,7 @@ export function OrderForm({ menuItems }: OrderFormProps) {
           onClick={() => {
             setRows([])
             setOrderNote('')
+            setShowSuccessScreen(false)
           }}
           className="mt-4 rounded-2xl bg-black px-8 py-4 text-lg font-semibold text-white transition hover:bg-stone-800"
         >
