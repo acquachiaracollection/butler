@@ -20,7 +20,7 @@ type Order = {
   id: string | number
   status: 'pending' | 'preparing' | 'completed' | 'canceled'
   items: OrderItem[]
-  note: string
+  note?: string | null
   staffNotes: string
   createdAt: string
   updatedAt: string

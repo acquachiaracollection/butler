@@ -59,6 +59,7 @@ export async function POST(request: NextRequest) {
 
     const created = await payload.create({
       collection: 'menu-items',
+      draft: false,
       data: {
         name,
         description,

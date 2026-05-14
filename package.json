@@ -59,9 +59,7 @@
     "onlyBuiltDependencies": [
       "sharp",
       "esbuild",
-      "unrs-resolver",
-      "@swc/core",
-      "postcss"
+      "unrs-resolver"
     ]
   }
 }
