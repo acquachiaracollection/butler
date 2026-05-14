@@ -48,6 +48,18 @@ export const Orders: CollectionConfig = {
       type: 'textarea',
     },
     {
+      name: 'staffNotes',
+      label: 'Staff Notes',
+      type: 'textarea',
+      admin: {
+        description: 'Annotazioni interne su articoli non serviti o problemi riscontrati.',
+      },
+      access: {
+        create: isAuthenticatedField,
+        update: isAuthenticatedField,
+      },
+    },
+    {
       name: 'status',
       type: 'select',
       required: true,

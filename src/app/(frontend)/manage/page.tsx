@@ -70,6 +70,7 @@ export default async function ManagePage() {
       menuItem: item.menuItem,
     })),
     note: order.note,
+    staffNotes: order.staffNotes ?? '',
     createdAt: order.createdAt,
     updatedAt: order.updatedAt,
     handledBy: order.handledBy,

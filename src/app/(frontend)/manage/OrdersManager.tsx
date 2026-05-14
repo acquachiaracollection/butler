@@ -21,6 +21,7 @@ type Order = {
   status: 'pending' | 'preparing' | 'completed' | 'canceled'
   items: OrderItem[]
   note: string
+  staffNotes: string
   createdAt: string
   updatedAt: string
   handledBy?: any
@@ -59,27 +60,75 @@ export function OrdersManager({ initialOrders }: OrdersManagerProps) {
   const [orders, setOrders] = useState<Order[]>(initialOrders)
   const [expandedOrderId, setExpandedOrderId] = useState<string | number | null>(null)
   const [currentPage, setCurrentPage] = useState(1)
+  const [pendingStaffNotes, setPendingStaffNotes] = useState<Record<string, string>>({})
+  const [savingStaffNotesIds, setSavingStaffNotesIds] = useState<(string | number)[]>([])
+
+  const getOrderKey = (orderId: string | number) => String(orderId)
+
+  const setStaffNotesSaving = (orderId: string | number, value: boolean) => {
+    setSavingStaffNotesIds((current) =>
+      value
+        ? current.includes(orderId)
+          ? current
+          : [...current, orderId]
+        : current.filter((id) => id !== orderId),
+    )
+  }
+
+  const updateLocalOrder = (
+    orderId: string | number,
+    patch: Partial<Pick<Order, 'status' | 'staffNotes'>>,
+  ) => {
+    setOrders((prev) => prev.map((o) => (o.id === orderId ? { ...o, ...patch } : o)))
+  }
+
+  const updateOrder = async (
+    orderId: string | number,
+    payload: { status?: Order['status']; staffNotes?: string },
+  ) => {
+    const response = await fetch(`/api/orders/${orderId}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    })
+
+    const result = await response.json()
+
+    if (!response.ok) {
+      throw new Error(result?.message || "Impossibile aggiornare l'ordine")
+    }
+
+    return result
+  }
 
   const updateOrderStatus = async (orderId: string | number, newStatus: string) => {
     try {
-      const response = await fetch(`/api/orders/${orderId}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status: newStatus }),
-      })
-
-      if (response.ok) {
-        setOrders((prev) =>
-          prev.map((o) => (o.id === orderId ? { ...o, status: newStatus as any } : o)),
-        )
-      } else {
-        const errorData = await response.json()
-        console.error("Errore nell'aggiornamento:", response.status, errorData)
-        alert(`Errore: ${errorData.message || "Impossibile aggiornare l'ordine"}`)
-      }
+      const result = await updateOrder(orderId, { status: newStatus as Order['status'] })
+      const nextStatus = result?.order?.status ?? newStatus
+      updateLocalOrder(orderId, { status: nextStatus as Order['status'] })
     } catch (error) {
-      console.error("Errore nell'aggiornamento dello status:", error)
+      console.error("Errore nell'aggiornamento:", error)
       alert("Errore di connessione nell'aggiornamento dell'ordine")
+    }
+  }
+
+  const saveStaffNotes = async (orderId: string | number) => {
+    const key = getOrderKey(orderId)
+    const draft = pendingStaffNotes[key]
+    const currentOrder = orders.find((order) => order.id === orderId)
+    const nextStaffNotes = draft ?? currentOrder?.staffNotes ?? ''
+
+    setStaffNotesSaving(orderId, true)
+    try {
+      const result = await updateOrder(orderId, { staffNotes: nextStaffNotes })
+      const savedStaffNotes = result?.order?.staffNotes ?? nextStaffNotes
+      updateLocalOrder(orderId, { staffNotes: savedStaffNotes })
+      setPendingStaffNotes((current) => ({ ...current, [key]: savedStaffNotes }))
+    } catch (error) {
+      console.error('Errore salvataggio staff notes:', error)
+      alert('Errore nel salvataggio delle staff notes')
+    } finally {
+      setStaffNotesSaving(orderId, false)
     }
   }
 
@@ -146,6 +195,9 @@ export function OrdersManager({ initialOrders }: OrdersManagerProps) {
               0,
             )
             const isExpanded = expandedOrderId === order.id
+            const orderKey = getOrderKey(order.id)
+            const currentStaffNotes = pendingStaffNotes[orderKey] ?? order.staffNotes ?? ''
+            const isSavingStaffNotes = savingStaffNotesIds.includes(order.id)
 
             return (
               <div
@@ -219,6 +271,38 @@ export function OrdersManager({ initialOrders }: OrdersManagerProps) {
                         <p className="mt-1 text-sm text-gray-800">{order.note}</p>
                       </div>
                     )}
+
+                    <div className="mb-6 rounded-lg bg-white p-3">
+                      <label
+                        htmlFor={`staff-notes-${order.id}`}
+                        className="text-xs font-semibold uppercase text-gray-600"
+                      >
+                        Note dello staff:
+                      </label>
+                      <textarea
+                        id={`staff-notes-${order.id}`}
+                        value={currentStaffNotes}
+                        onChange={(e) =>
+                          setPendingStaffNotes((current) => ({
+                            ...current,
+                            [orderKey]: e.target.value,
+                          }))
+                        }
+                        placeholder="Indica eventuali articoli non serviti o problemi riscontrati"
+                        rows={3}
+                        className="mt-2 w-full rounded-lg border border-black px-3 py-2 text-sm text-black"
+                      />
+                      <div className="mt-2 flex justify-end">
+                        <button
+                          type="button"
+                          onClick={() => saveStaffNotes(order.id)}
+                          disabled={isSavingStaffNotes}
+                          className="rounded-lg border border-black bg-white px-4 py-2 text-xs font-semibold uppercase tracking-[0.08em] text-black transition hover:bg-black hover:text-white disabled:cursor-not-allowed disabled:opacity-60"
+                        >
+                          {isSavingStaffNotes ? 'Salvataggio...' : 'Salva note dello staff'}
+                        </button>
+                      </div>
+                    </div>
 
                     {/* Status selector */}
                     <div className="flex flex-col gap-3 border-t border-black pt-4 sm:flex-row sm:items-center sm:justify-between">

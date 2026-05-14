@@ -210,6 +210,10 @@ export interface Order {
     id?: string | null;
   }[];
   note?: string | null;
+  /**
+   * Annotazioni interne su articoli non serviti o problemi riscontrati.
+   */
+  staffNotes?: string | null;
   status: 'pending' | 'preparing' | 'completed' | 'canceled';
   handledBy?: (number | null) | User;
   updatedAt: string;
@@ -380,6 +384,7 @@ export interface OrdersSelect<T extends boolean = true> {
         id?: T;
       };
   note?: T;
+  staffNotes?: T;
   status?: T;
   handledBy?: T;
   updatedAt?: T;
