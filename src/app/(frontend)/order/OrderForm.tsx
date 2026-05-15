@@ -131,9 +131,7 @@ export function OrderForm({ menuItems }: OrderFormProps) {
         <button
           type="button"
           onClick={() => {
-            setRows([])
-            setOrderNote('')
-            setShowSuccessScreen(false)
+            window.location.reload()
           }}
           className="mt-4 rounded-2xl bg-black px-8 py-4 text-lg font-semibold text-white transition hover:bg-stone-800"
         >
