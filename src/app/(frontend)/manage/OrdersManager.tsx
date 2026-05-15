@@ -86,7 +86,7 @@ export function OrdersManager({ initialOrders }: OrdersManagerProps) {
     orderId: string | number,
     payload: { status?: Order['status']; staffNotes?: string },
   ) => {
-    const response = await fetch(`/api/orders/${orderId}`, {
+    const response = await fetch(`/api/internal/orders/${orderId}`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),

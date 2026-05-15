@@ -2,6 +2,7 @@ import { Cormorant_Garamond, Manrope } from 'next/font/google'
 import type { Metadata } from 'next'
 import configPromise from '@payload-config'
 import { getPayload } from 'payload'
+import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { LoginForm } from './LoginForm'
 
@@ -25,14 +26,15 @@ export const metadata: Metadata = {
 
 export default async function LoginPage() {
   const payload = await getPayload({ config: configPromise })
+  const headersList = await headers()
 
   // Check if user is already authenticated
   try {
-    const result = await payload.find({
-      collection: 'orders',
-      limit: 1,
-    })
-    // If able to read orders, user is authenticated
+    const result = await payload.auth({ headers: headersList })
+    if (!result.user) {
+      throw new Error('Not authenticated')
+    }
+
     redirect('/dashboard')
   } catch (error) {
     // User is not authenticated, continue to login page

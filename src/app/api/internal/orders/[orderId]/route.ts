@@ -16,7 +16,6 @@ export async function PATCH(
 
     const payload = await getPayload({ config: configPromise })
 
-    // Check authentication using request headers
     let user
     try {
       const result = await payload.auth({ headers: request.headers })
@@ -66,7 +65,6 @@ export async function PATCH(
       data.staffNotes = rawStaffNotes === null ? null : String(rawStaffNotes).trim()
     }
 
-    // Update order
     const updatedOrder = await payload.update({
       collection: 'orders',
       where: {
@@ -75,6 +73,8 @@ export async function PATCH(
         },
       },
       data,
+      user,
+      overrideAccess: false,
     })
 
     const order = updatedOrder?.docs?.[0]

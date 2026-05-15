@@ -47,11 +47,15 @@ export default async function InventoryPage() {
       depth: 1,
       limit: 200,
       sort: 'name',
+      user,
+      overrideAccess: false,
     }),
     payload.find({
       collection: 'menu-categories',
       limit: 200,
       sort: 'name',
+      user,
+      overrideAccess: false,
     }),
   ])
 
