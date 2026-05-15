@@ -1,8 +1,5 @@
 'use server'
 
-import configPromise from '@payload-config'
-import { getPayload } from 'payload'
-
 type LoginResult = {
   success: boolean
   message?: string
@@ -10,11 +7,8 @@ type LoginResult = {
 
 export async function loginAction(email: string, password: string): Promise<LoginResult> {
   try {
-    const payload = await getPayload({ config: configPromise })
-
-    // Login using Payload's REST API endpoint via fetch
     const response = await fetch(
-      `${process.env.PAYLOAD_PUBLIC_SERVER_URL || 'http://localhost:3000'}/api/users/login`,
+      `${process.env.PAYLOAD_PUBLIC_SERVER_URL || 'http://localhost:3000'}/api/internal/auth/login`,
       {
         method: 'POST',
         headers: {

@@ -96,6 +96,8 @@ export async function PATCH(
         },
       },
       data,
+      user,
+      overrideAccess: false,
     })
 
     const updatedItem = updated?.docs?.[0]
@@ -160,6 +162,8 @@ export async function DELETE(
           equals: parsedMenuItemId,
         },
       },
+      user,
+      overrideAccess: false,
     })
 
     if (!deleted?.docs?.length) {

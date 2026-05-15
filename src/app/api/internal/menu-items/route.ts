@@ -26,7 +26,6 @@ export async function POST(request: NextRequest) {
     const isAvailable = Boolean(body?.isAvailable)
     let image = null
     if (body?.image !== null && body?.image !== undefined && body?.image !== '') {
-      // Accetta sia numeri che stringhe numeriche positive
       if (typeof body.image === 'number' && body.image > 0) {
         image = body.image
       } else if (
@@ -68,6 +67,8 @@ export async function POST(request: NextRequest) {
         isAvailable,
         ...(image !== null ? { image } : {}),
       },
+      user,
+      overrideAccess: false,
     })
 
     const item = {

@@ -177,7 +177,7 @@ export function InventoryManager({ initialMenuItems, categories }: InventoryMana
         imagePatch = { image: uploaded.mediaId }
       }
 
-      const response = await fetch(`/api/menu-items/${item.id}`, {
+      const response = await fetch(`/api/internal/menu-items/${item.id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -224,7 +224,7 @@ export function InventoryManager({ initialMenuItems, categories }: InventoryMana
     setItemDeleting(id, true)
 
     try {
-      const response = await fetch(`/api/menu-items/${id}`, {
+      const response = await fetch(`/api/internal/menu-items/${id}`, {
         method: 'DELETE',
       })
 
@@ -269,7 +269,7 @@ export function InventoryManager({ initialMenuItems, categories }: InventoryMana
         image = uploaded.mediaId
       }
 
-      const response = await fetch('/api/menu-items', {
+      const response = await fetch('/api/internal/menu-items', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

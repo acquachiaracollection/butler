@@ -29,11 +29,6 @@ export default async function ManagePage() {
   const payload = await getPayload({ config: configPromise })
   const headersList = await headers()
 
-  // Create a request-like object with headers
-  const req = {
-    headers: headersList,
-  }
-
   // Check authentication
   let user
   try {
@@ -55,6 +50,8 @@ export default async function ManagePage() {
       depth: 2,
       limit: 100,
       sort: '-createdAt',
+      user,
+      overrideAccess: false,
     })
   } catch (error) {
     console.error('Error fetching orders:', error)
