@@ -5,6 +5,7 @@ import type { Metadata } from 'next'
 import { headers } from 'next/headers'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
+import { PushNotificationToggle } from '../components/PushNotificationToggle'
 
 const titleFont = Cormorant_Garamond({
   subsets: ['latin'],
@@ -82,6 +83,13 @@ export default async function DashboardPage() {
               Gestisci menu, disponibilita, prezzi e immagini dei prodotti.
             </p>
           </Link>
+        </div>
+
+        <div className="mt-6 rounded-2xl border border-black bg-white/80 p-5 shadow-lg shadow-black/10 backdrop-blur sm:p-7">
+          <h2 className="mb-4 text-lg font-semibold text-black [font-family:var(--font-title)]">
+            Impostazioni Notifiche
+          </h2>
+          <PushNotificationToggle />
         </div>
       </section>
     </main>

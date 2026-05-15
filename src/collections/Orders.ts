@@ -1,5 +1,6 @@
 import type { CollectionConfig } from 'payload'
 import { isAuthenticated, isAuthenticatedField } from '../access/isAuthenticated'
+import { sendPushNotificationToAllButlers } from '../lib/push'
 
 export const Orders: CollectionConfig = {
   slug: 'orders',
@@ -99,4 +100,27 @@ export const Orders: CollectionConfig = {
       },
     },
   ],
+  hooks: {
+    afterChange: [
+      async ({ doc, operation, req }) => {
+        // Only send notifications when a new order is created
+        if (operation === 'create') {
+          try {
+            await sendPushNotificationToAllButlers(req.payload, {
+              title: 'Nuovo Ordine',
+              body: `Nuovo ordine da processare`,
+              tag: `order-${doc.id}`,
+              data: {
+                orderId: doc.id as string,
+                action: 'open_order',
+              },
+            })
+          } catch (error) {
+            console.error('Error sending push notification for new order:', error)
+            // Don't fail the operation if push notification fails
+          }
+        }
+      },
+    ],
+  },
 }

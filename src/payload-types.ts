@@ -72,6 +72,7 @@ export interface Config {
     'menu-categories': MenuCategory;
     'menu-items': MenuItem;
     orders: Order;
+    'push-subscriptions': PushSubscription;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -84,6 +85,7 @@ export interface Config {
     'menu-categories': MenuCategoriesSelect<false> | MenuCategoriesSelect<true>;
     'menu-items': MenuItemsSelect<false> | MenuItemsSelect<true>;
     orders: OrdersSelect<false> | OrdersSelect<true>;
+    'push-subscriptions': PushSubscriptionsSelect<false> | PushSubscriptionsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -221,6 +223,19 @@ export interface Order {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "push-subscriptions".
+ */
+export interface PushSubscription {
+  id: number;
+  user: number | User;
+  endpoint: string;
+  auth: string;
+  p256dh: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
@@ -262,6 +277,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'orders';
         value: number | Order;
+      } | null)
+    | ({
+        relationTo: 'push-subscriptions';
+        value: number | PushSubscription;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -387,6 +406,18 @@ export interface OrdersSelect<T extends boolean = true> {
   staffNotes?: T;
   status?: T;
   handledBy?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "push-subscriptions_select".
+ */
+export interface PushSubscriptionsSelect<T extends boolean = true> {
+  user?: T;
+  endpoint?: T;
+  auth?: T;
+  p256dh?: T;
   updatedAt?: T;
   createdAt?: T;
 }

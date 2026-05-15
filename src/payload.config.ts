@@ -11,6 +11,7 @@ import { Media } from './collections/Media'
 import { MenuCategories } from './collections/MenuCategories'
 import { MenuItems } from './collections/MenuItems'
 import { Orders } from './collections/Orders'
+import { PushSubscriptions } from './collections/PushSubscriptions'
 import { migrations } from './migrations'
 
 const filename = fileURLToPath(import.meta.url)
@@ -23,7 +24,7 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  collections: [Users, Media, MenuCategories, MenuItems, Orders],
+  collections: [Users, Media, MenuCategories, MenuItems, Orders, PushSubscriptions],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {
