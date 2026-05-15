@@ -1,7 +1,12 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { enablePushNotifications, disablePushNotifications, isPushNotificationsEnabled, isPushNotificationsSupported } from '@/lib/push-client'
+import {
+  enablePushNotifications,
+  disablePushNotifications,
+  isPushNotificationsEnabled,
+  isPushNotificationsSupported,
+} from '@/lib/push-client'
 
 export function PushNotificationToggle() {
   const [enabled, setEnabled] = useState(false)
@@ -83,13 +88,9 @@ export function PushNotificationToggle() {
           />
         </button>
       </div>
-      {error && (
-        <p className="text-xs text-red-600">{error}</p>
-      )}
+      {error && <p className="text-xs text-red-600">{error}</p>}
       <p className="text-xs text-stone-600">
-        {enabled
-          ? 'Riceverai notifiche per nuovi ordini'
-          : 'Le notifiche sono disabilitate'}
+        {enabled ? 'Riceverai notifiche per nuovi ordini' : 'Le notifiche sono disabilitate'}
       </p>
     </div>
   )

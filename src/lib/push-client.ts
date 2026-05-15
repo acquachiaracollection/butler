@@ -20,7 +20,7 @@ export async function requestPushPermission(): Promise<NotificationPermission> {
   }
 
   if (Notification.permission === 'denied') {
-    throw new Error('Le notifiche sono state negate dall\'utente')
+    throw new Error("Le notifiche sono state negate dall'utente")
   }
 
   return Notification.requestPermission()
@@ -79,9 +79,7 @@ export async function unsubscribeFromPushNotifications(): Promise<void> {
   }
 }
 
-export async function sendSubscriptionToServer(
-  subscription: PushSubscriptionJSON,
-): Promise<void> {
+export async function sendSubscriptionToServer(subscription: PushSubscriptionJSON): Promise<void> {
   const response = await fetch('/api/internal/notifications/subscribe', {
     method: 'POST',
     headers: {

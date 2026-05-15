@@ -18,10 +18,7 @@ export async function POST(request: NextRequest) {
     const { subscription } = body
 
     if (!subscription?.endpoint || !subscription?.keys?.auth || !subscription?.keys?.p256dh) {
-      return NextResponse.json(
-        { message: 'Dati di sottoscrizione non validi' },
-        { status: 400 },
-      )
+      return NextResponse.json({ message: 'Dati di sottoscrizione non validi' }, { status: 400 })
     }
 
     // Check if subscription already exists
@@ -35,10 +32,7 @@ export async function POST(request: NextRequest) {
     })
 
     if (docs.length > 0) {
-      return NextResponse.json(
-        { message: 'Sottoscrizione già registrata' },
-        { status: 409 },
-      )
+      return NextResponse.json({ message: 'Sottoscrizione già registrata' }, { status: 409 })
     }
 
     // Create new subscription

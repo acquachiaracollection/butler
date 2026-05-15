@@ -32,21 +32,16 @@ export async function POST(request: NextRequest) {
     })
 
     if (docs.length === 0) {
-      return NextResponse.json(
-        { message: 'Sottoscrizione non trovata' },
-        { status: 404 },
-      )
+      return NextResponse.json({ message: 'Sottoscrizione non trovata' }, { status: 404 })
     }
 
     const subscription = docs[0]
 
     // Verify ownership - subscription.user can be either a number (ID) or User object
-    const subscriptionUserId = typeof subscription.user === 'object' ? subscription.user.id : subscription.user
+    const subscriptionUserId =
+      typeof subscription.user === 'object' ? subscription.user.id : subscription.user
     if (subscriptionUserId !== user.id) {
-      return NextResponse.json(
-        { message: 'Non autorizzato' },
-        { status: 403 },
-      )
+      return NextResponse.json({ message: 'Non autorizzato' }, { status: 403 })
     }
 
     await payload.delete({

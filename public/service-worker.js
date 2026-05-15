@@ -39,9 +39,7 @@ self.addEventListener('push', (event) => {
     requireInteraction: true,
   }
 
-  event.waitUntil(
-    self.registration.showNotification(notificationData.title || 'Notifica', options),
-  )
+  event.waitUntil(self.registration.showNotification(notificationData.title || 'Notifica', options))
 })
 
 // Handle notification clicks
@@ -75,4 +73,3 @@ self.addEventListener('notificationclick', (event) => {
     }),
   )
 })
-
