@@ -2,6 +2,7 @@
 
 import { FormEvent, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 
 export function LoginForm() {
   const router = useRouter()
@@ -86,6 +87,13 @@ export function LoginForm() {
       >
         {loading ? 'Accesso in corso...' : 'Accedi'}
       </button>
+
+      <Link
+        href="/order"
+        className="block w-full rounded-lg border-2 border-black bg-white px-6 py-3 text-center text-base font-bold text-black transition hover:bg-gray-100"
+      >
+        Crea Ordine
+      </Link>
     </form>
   )
 }
