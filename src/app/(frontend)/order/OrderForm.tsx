@@ -168,17 +168,17 @@ export function OrderForm({ menuItems }: OrderFormProps) {
               Nessun piatto disponibile al momento.
             </div>
           ) : (
-            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 ">
               {menuItems.map((item) => (
                 <button
                   key={item.id}
                   type="button"
                   onClick={() => addMenuItem(item.id)}
                   disabled={pending || submitLocked}
-                  className="group flex flex-col overflow-hidden rounded-2xl border border-black bg-white text-left transition hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-50"
+                  className="group flex flex-col overflow-hidden rounded-2xl border border-black bg-white text-left transition hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer"
                 >
                   {/* Image */}
-                  <div className="relative aspect-4/3 w-full bg-stone-100">
+                  <div className="relative aspect-4/3 w-full bg-stone-100 ">
                     {item.imageUrl ? (
                       <Image
                         src={item.imageUrl}
