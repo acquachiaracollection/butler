@@ -185,7 +185,7 @@ export function OrderForm({ menuItems }: OrderFormProps) {
                         alt={item.name}
                         fill
                         sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                        className="object-contain p-2"
+                        className="object-cover"
                       />
                     ) : (
                       <div className="flex h-full items-center justify-center text-xs font-medium text-stone-500">
@@ -232,14 +232,14 @@ export function OrderForm({ menuItems }: OrderFormProps) {
                       className="flex items-start gap-3 rounded-xl border border-black bg-white p-3"
                     >
                       {/* Item image */}
-                      <div className="relative h-12 w-12 shrink-0 rounded-lg">
+                      <div className="relative h-12 w-12 shrink-0 rounded-lg bg-stone-100">
                         {item?.imageUrl ? (
                           <Image
                             src={item.imageUrl}
                             alt={item.name}
                             fill
                             sizes="48px"
-                            className="object-contain"
+                            className="object-cover"
                           />
                         ) : (
                           <div className="flex h-full items-center justify-center text-xs font-medium text-gray-500">
